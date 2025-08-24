@@ -1,6 +1,6 @@
 ---
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "SCIM Extension for Agents"
+abbrev: "SCIM-AI"
 category: info
 
 docname: draft-scim-agent-extension-latest
@@ -25,9 +25,9 @@ venue:
 
 author:
  -
-    fullname: "macyabbey"
-    organization: Your Organization Here
-    email: "macy.abbey@gmail.com"
+    fullname: "Macy Abbey"
+    organization: Okta
+    email: "macy.abbey@okta.com"
 
 normative:
 
