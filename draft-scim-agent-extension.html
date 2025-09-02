@@ -1280,13 +1280,13 @@ early adopters rush to define new standards for identity interopability.<a href=
 <p id="section-1-6">This includes but is not limited to:<a href="#section-1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-7.1">
-          <p id="section-1-7.1.1"><a href="https://agentcommunicationprotocol.dev/core-concepts/agent-discovery">ACP</a>,<a href="#section-1-7.1.1" class="pilcrow">¶</a></p>
+          <p id="section-1-7.1.1"><a href="https://agentcommunicationprotocol.dev/core-concepts/agent-discovery">ACP</a><a href="#section-1-7.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-7.2">
-          <p id="section-1-7.2.1"><a href="https://a2a-protocol.org/latest/topics/agent-discovery/">A2A</a>,<a href="#section-1-7.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-7.2.1"><a href="https://a2a-protocol.org/latest/topics/agent-discovery/">A2A</a><a href="#section-1-7.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-7.3">
-          <p id="section-1-7.3.1"><a href="https://genai.owasp.org/resource/agent-name-service-ans-for-secure-al-agent-discovery-v1-0/">ANS</a>,<a href="#section-1-7.3.1" class="pilcrow">¶</a></p>
+          <p id="section-1-7.3.1"><a href="https://genai.owasp.org/resource/agent-name-service-ans-for-secure-al-agent-discovery-v1-0/">ANS</a><a href="#section-1-7.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-7.4">
           <p id="section-1-7.4.1"><a href="https://docs.agntcy.org/dir/overview/">AGNTCY</a><a href="#section-1-7.4.1" class="pilcrow">¶</a></p>
@@ -1398,16 +1398,18 @@ this document define the ResourceType, Schema and Extensions for Agent.<a href="
 <a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-agent-resource-type" class="section-name selfRef">Agent Resource Type</a>
           </h4>
 <p id="section-5.1.1-1">The Agent Resource Type schema is:<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1.1-2"><code>json
-{
-   "schemas": ["urn:ietf:params:scim:schemas:core:2.0:ResourceType"],
-   "id": "Agent",
-   "name": "Agent",
-   "endpoint": "/Agents",
-   "description": "Agent identities",
-   "schema": "urn:ietf:params:scim:schemas:core:2.0:agent",
-}
-</code><a href="#section-5.1.1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.1.1-2">
+<pre>
+  {
+     "schemas": ["urn:ietf:params:scim:schemas:core:2.0:ResourceType"],
+     "id": "Agent",
+     "name": "Agent",
+     "endpoint": "/Agents",
+     "description": "Agent identities",
+     "schema": "urn:ietf:params:scim:schemas:core:2.0:agent",
+  }
+</pre><a href="#section-5.1.1-2" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="agent-filtering">
