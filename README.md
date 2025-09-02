@@ -1,8 +1,8 @@
 <!-- regenerate: on (set to off if you edit this file) -->
 
-# TODO - Your title
+# SCIM Agents and Agentic Applications Extension
 
-This is the working area for the individual Internet-Draft, "TODO - Your title".
+This is the working area for the individual Internet-Draft, "SCIM Agents and Agentic Applications Extension".
 
 * [Editor's Copy](https://macyabbey.github.io/draft-scim-agent-extension/#go.draft-scim-agent-extension.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-scim-agent-extension)
