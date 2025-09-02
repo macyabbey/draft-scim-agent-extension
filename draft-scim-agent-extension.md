@@ -11,10 +11,10 @@ v: 3
 # area: AREA
 workgroup: SCIM
 keyword:
- - SCIM
- - Agents
- - Agentic applications
- - Workloads
+  - SCIM
+  - Agents
+  - Agentic applications
+  - Workloads
 stand_alone: yes
 smart_quotes: no
 pi: [toc, sortrefs, symrefs]
@@ -27,9 +27,9 @@ venue:
   latest: "https://macyabbey.github.io/draft-scim-agent-extension/draft-scim-agent-extension.html"
 
 author:
- - fullname: "Macy Abbey"
-   organization: Okta
-   email: "macy.abbey@okta.com"
+  - fullname: "Macy Abbey"
+    organization: Okta
+    email: "macy.abbey@okta.com"
 
 # Normative/information references documented better here
 #  https://github.com/cabo/kramdown-rfc
@@ -73,8 +73,6 @@ informative:
 #     target: https://datatracker.ietf.org/doc/id/draft-grizzle-scim-pam-ext-01.txt
 #     format:
 #       TXT: https://datatracker.ietf.org/doc/id/draft-grizzle-scim-pam-ext-01.txt
-
-...
 
 --- abstract
 
