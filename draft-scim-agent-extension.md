@@ -118,9 +118,9 @@ early adopters rush to define new standards for identity interopability.
 
 This includes but is not limited to:
 
-- [ACP](https://agentcommunicationprotocol.dev/core-concepts/agent-discovery),
-- [A2A](https://a2a-protocol.org/latest/topics/agent-discovery/),
-- [ANS](https://genai.owasp.org/resource/agent-name-service-ans-for-secure-al-agent-discovery-v1-0/),
+- [ACP](https://agentcommunicationprotocol.dev/core-concepts/agent-discovery)
+- [A2A](https://a2a-protocol.org/latest/topics/agent-discovery/)
+- [ANS](https://genai.owasp.org/resource/agent-name-service-ans-for-secure-al-agent-discovery-v1-0/)
 - [AGNTCY](https://docs.agntcy.org/dir/overview/)
 
 The intent of this SCIM extension is to offer a viable path for the industry
@@ -207,16 +207,14 @@ this document define the ResourceType, Schema and Extensions for Agent.
 
 The Agent Resource Type schema is:
 
-```json
-{
-   "schemas": ["urn:ietf:params:scim:schemas:core:2.0:ResourceType"],
-   "id": "Agent",
-   "name": "Agent",
-   "endpoint": "/Agents",
-   "description": "Agent identities",
-   "schema": "urn:ietf:params:scim:schemas:core:2.0:agent",
-}
-```
+      {
+         "schemas": ["urn:ietf:params:scim:schemas:core:2.0:ResourceType"],
+         "id": "Agent",
+         "name": "Agent",
+         "endpoint": "/Agents",
+         "description": "Agent identities",
+         "schema": "urn:ietf:params:scim:schemas:core:2.0:agent",
+      }
 
 ### Agent filtering
 
