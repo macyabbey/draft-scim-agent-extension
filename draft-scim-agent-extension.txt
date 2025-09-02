@@ -2,18 +2,35 @@
 
 
 
-Network Working Group                                           M. Abbey
+SCIM                                                            M. Abbey
 Internet-Draft                                                      Okta
-Intended status: Informational                            24 August 2025
-Expires: 25 February 2026
+Intended status: Standards Track                        2 September 2025
+Expires: 6 March 2026
 
 
-                       SCIM Extension for Agents
+             SCIM Agents and Agentic Applications Extension
                    draft-scim-agent-extension-latest
 
 Abstract
 
-   TODO Abstract
+   The System for Cross-domain Identity Management (SCIM) specification
+   [RFC7643] provides schemas that represent common identity information
+   about users and groups, as well as a protocol for communicating that
+   information between systems.
+
+   The systems that tend to implement SCIM clients and servers are
+   identity providers, and service providers.  These are the same
+   systems that are now need to manage agents and agentic applications
+   across domains.
+
+   This document describes a SCIM 2.0 extension for agents and agentic
+   applications, which includes extensions to the core User and Group
+   objects, and new resource types and schemas for agentic constructs.
+
+   This extension is intended to provide greater interoperability
+   between Identity providers, agentic applications, agents and their
+   clients while reducing the responsibilities assumed by the every
+   growing list of new protocols for agents.
 
 About This Document
 
@@ -43,7 +60,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 February 2026.
+   This Internet-Draft will expire on 6 March 2026.
 
 Copyright Notice
 
@@ -62,18 +79,82 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-   2.  Conventions and Definitions
-   3.  Security Considerations
-   4.  IANA Considerations
-   5.  Normative References
-   Acknowledgments
+   2.  Conventions
+   3.  Definitions
+   4.  Core Schema Extensions
+     4.1.  ServiceProviderConfig
+   5.  Additional ResourceTypes and Schemas
+     5.1.  Agent
+       5.1.1.  Agent Resource Type
+       5.1.2.  Agent filtering
+       5.1.3.  Agent Common Attributes
+       5.1.4.  Agent Core Schema
+       5.1.5.  Agent extensions
+     5.2.  Agentic application
+       5.2.1.  Resource Type
+   6.  Schema JSON Representations
+   7.  Security Considerations
+   8.  IANA Considerations
+   9.  Change Log
+   10. References
+     10.1.  Normative References
+     10.2.  Informative References
+   Appendix A.  Acknowledgments
    Author's Address
 
 1.  Introduction
 
-   TODO Introduction
+   The SCIM protocol was originally developed to address an *abundance*
+   of complex standards for describing and exchanging user information.
 
-2.  Conventions and Definitions
+   As stated in the introduction of RFC764#Section-1.1
+   (https://datatracker.ietf.org/doc/html/rfc7643#section-1.1)
+
+      While there are existing standards for describing and exchanging
+      user information, many of these standards can be difficult to
+      implement and/or use...
+
+      This increases both the cost and complexity associated with
+      organizations adopting products and services from multiple cloud
+      providers, as they must perform redundant integration
+      development...SCIM seeks to simplify this problem through an
+      easily implemented specification suite...
+
+   With the rise of AI, agents, and agentic applications, we see another
+   abundance of protocols emerging, with varying levels of industry
+   adoption, as well as implementation complexity as many brilliant and
+   enthusiastic early adopters rush to define new standards for identity
+   interopability.
+
+   This includes but is not limited to:
+
+   *  ACP (https://agentcommunicationprotocol.dev/core-concepts/agent-
+      discovery),
+
+   *  A2A (https://a2a-protocol.org/latest/topics/agent-discovery/),
+
+   *  ANS (https://genai.owasp.org/resource/agent-name-service-ans-for-
+      secure-al-agent-discovery-v1-0/),
+
+   *  AGNTCY (https://docs.agntcy.org/dir/overview/)
+
+   The intent of this SCIM extension is to offer a viable path for the
+   industry to re-leverage the well known core SCIM specifications, as
+   well as existing implementations of SCIM clients and SCIM servers, to
+   solve for agent cross domain management.
+
+   In doing so, we can free the emerging standards in the agentic AI
+   space to focus on truly novel concerns, instead of addressing the
+   problems already solved by SCIM for user and groups.
+
+   For example, in the A2A protocol, instead of describing a very high
+   level concept of Curated registries (https://a2a-
+   protocol.org/latest/topics/agent-discovery/#2-curated-registries-
+   catalog-based-discovery) we could offer more concrete guidance by
+   stating Agent Cards may be discovered by a SCIM client accessing any
+   SCIM server that implements this extension.
+
+2.  Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -81,28 +162,292 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-3.  Security Considerations
+3.  Definitions
 
-   TODO Security
+   Agent: A workload with its own identifier, metadata and privileges
+   which are independent of a particular runtime environment or
+   containing application.  An agent is distinct from a traditional
+   software workloads (lambdas, services, etc...) due to varying degrees
+   of unpredictable behavior caused by delegation of control flow to
+   artificial intelligence models.
 
-4.  IANA Considerations
+   Agentic application: An application exposing one or more agents to
+   its users.  An agentic application is similar to a traditional native
+   or web application, in that there are pre-defined ways authenticate
+   and interact with the application; however, as soon as the
+   application exposes agents, there are additional considerations for
+   managing access to that application.
+
+4.  Core Schema Extensions
+
+4.1.  ServiceProviderConfig
+
+   SCIM endpoints that support Agent extensions MUST advertise this
+   support in the ServiceProviderConfig endpoint as defined:
+
+   ``` agentExtension A complex type that specifies Agent Extension
+   configuration options.
+
+  supported Boolean value specifying whether any aspect of the extension is supported.
+
+  agentsSupported Boolean value specifying whether the agent resource type
+                  is supported
+
+  agenticApplicationsSupported Boolean value specifying whether the agent
+                               resource type is supported ```
+
+   This is required so that:
+
+   1) Clients may know if the server supports the concept of Agents. 2)
+   Servers discourage clients from confusing users and agents.
+
+   If the server does not support the concept of agents, a SCIM client
+   MAY choose to create a User representation in the server for an
+   Agent.  All the reasons it may choose to do so are beyond the scope
+   of this document.  If the client does so, the client SHOULD indicate
+   the user is linked to an agent using a LinkedObject from draft-
+   grizzle-scim-pam-ext-01 (https://datatracker.ietf.org/doc/id/draft-
+   grizzle-scim-pam-ext-01.txt) This would allow a SCIM server that
+   supports that SCIM extension to add support for this extension and
+   determine what users in the server should be mapped to agents when
+   support is added.
+
+5.  Additional ResourceTypes and Schemas
+
+   This SCIM Agent extension defines additional ResourceTypes and
+   Schemas that MAY be implemented by the service provider.  If
+   implemented, these ResourceTypes SHOULD support all SCIM operations
+   [RFC7644].  All attributes defined in the schemas are optional unless
+   explicitly marked as REQUIRED.
+
+5.1.  Agent
+
+   This extension adds a new resource type of "Agent".
+
+   Pursuant to [RFC7643] Section 3.2 Defining New Resource Types
+   (https://datatracker.ietf.org/doc/html/rfc7643#section-3.2) this
+   document define the ResourceType, Schema and Extensions for Agent.
+
+5.1.1.  Agent Resource Type
+
+   The Agent Resource Type schema is:
+
+   json { "schemas":
+   ["urn:ietf:params:scim:schemas:core:2.0:ResourceType"], "id":
+   "Agent", "name": "Agent", "endpoint": "/Agents", "description":
+   "Agent identities", "schema":
+   "urn:ietf:params:scim:schemas:core:2.0:agent", }
+
+5.1.2.  Agent filtering
+
+   Clients MAY have a reference to the Agent name or externalId but not
+   the ID.  For this reason, it is RECOMMENDED that service providers
+   implement filtering that allows equality matching on the "name" and
+   "externalId" attributes.
+
+   Example (note that escaping has been removed for readability):
+
+   GET /scim/v2/Agents?filter=name eq 'Helpdesk bot' GET /scim/v2/
+   Agents?filter=externalId eq '8ccc535b-716d-4d32-b3e9-57c8be449c82'
+
+5.1.3.  Agent Common Attributes
+
+   The agent resource type contains the common SCIM resource type
+   attributes defined in [RFC7643] Section 3.1 Common Attributes
+   (https://datatracker.ietf.org/doc/html/rfc7643#section-3.1)
+
+   They are listed here for completeness:
+
+   *  id
+
+   *  externalId
+
+   *  meta
+
+5.1.4.  Agent Core Schema
+
+   The core agent schema provides the minimal representation of a
+   resource "Agent".
+
+   It contains only those attributes that any agent may need, and only
+   one attribute is required.  It is identified using the schema URI:
+
+   "urn:ietf:params:scim:schemas:core:2.0:Agent"
+
+   The following attributes are defined in the core agent schema.
+
+   name The name of the Agent.  REQUIRED
+
+   displayName The display name of the Agent.  If displayName is
+   unassigned, the name MAY be used as the display name.
+
+   description The description of the Agent.
+
+   type The type of agent.  There are no canonical values defined for
+   type, but service providers MAY choose to define the valid types.
+
+   active A Boolean value indicating the agent's administrative status.
+   The definitive meaning of this attribute is determined by the service
+   provider.  As a typical example, a value of true implies that the
+   agent is running, while a value of false implies that the agent has
+   been suspended.
+
+   entitlements An optional complex object that indicates entitlements
+   the agent has.  Its form is precisely the same as that defined in
+   Section 4.1.2 of [RFC7643].
+
+   roles: An optional complex object that indicates roles the agent
+   assumes.  Its form is precisely the same as that defined in
+   Section 4.1.2 of [RFC7643].
+
+   groups: An optional read-only complex object that indicates group
+   membership.  Its form is precisely the same as that defined in
+   Section 4.1.2 of [RFC7643].
+
+   applications A complex multi-valued attribute referencing
+   applications this agent shares a trust boundary with.  See "Agentic
+   Application" section of this document.
+
+   subject An optional attribute that clients may specify when
+   provisioning an agent so that service providers implementing inbound
+   token federation may correlate the agent with the sub claim in an
+   inbound token from an OpenID connect provider.
+
+   protocols A complex attribute that informs service providers of the
+   various communication protocols an agent may support.  This
+   information can help service providers automatically support agent to
+   agent or human to agent communication scenarios.  An agent that
+   supports no protocols is understood to the service provider to not be
+   directly accessible.  For example, when an agent can only be accessed
+   via its containing agentic application.
+
+     The following sub-attributes are defined.
+
+        type The type of the protocol. A number of canonical values
+             are provided based on known agent protocols. They are:
+             A2A, OpenAPI, MCP-Client, MCP-Server
+
+   specificationUrl The URL the service provider may retrieve the
+   specification document describing the agent's specific information
+   for that protocol.
+
+   parent A complex attribute that defines the parent Agent of this
+   Agent if the service provider supports hierarchies of agents.  The
+   following sub-attributes are defined.
+
+     value  The ID of the agent that is the parent of this
+        Agent in the hierarchy.
+
+     $ref  A URI reference to the Agent that is the parent of this
+        Agent in the hierarchy.
+
+     display  The display name of the Agent that is the parent of
+        this Agent in the hierarchy.
+
+   owners A complex multi-valued attribute that defines the User or
+   Group objects that are owners of this Agent.  OPTIONAL.  The
+   following sub-attributes are defined for each value object.
+
+     value  The ID of the User that owns this Agent.
+
+     $ref  A URI reference to the User that owns this Agent.
+
+     display  The display name of the user that owns this Agent.
+
+5.1.4.1.  Agent JSON Example
+
+   ```json
+
+   ```
+
+5.1.4.2.  Agent Schema Json
+
+   json
+
+5.1.5.  Agent extensions
+
+5.2.  Agentic application
+
+5.2.1.  Resource Type
+
+   ### Filtering ### Schema ### Example
+
+6.  Schema JSON Representations
+
+7.  Security Considerations
+
+      fill out
+
+8.  IANA Considerations
 
    This document has no IANA actions.
 
-5.  Normative References
+9.  Change Log
+
+   -00
+
+   *  Initial draft extension.
+
+10.  References
+
+10.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/rfc/rfc2119>.
 
+   [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and C.
+              Mortimore, "System for Cross-domain Identity Management:
+              Core Schema", RFC 7643, DOI 10.17487/RFC7643, September
+              2015, <https://www.rfc-editor.org/rfc/rfc7643>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-Acknowledgments
+10.2.  Informative References
 
-   TODO acknowledge.
+   [ENTITLEMENTS]
+              Zollner, D. and U. Vartak, "SCIM Roles and Entitlements
+              Extension", n.d., <https://github.com/ietf-scim-wg/draft-
+              ietf-scim-roles-entitlements/blob/main/draft-ietf-scim-
+              roles-entitlements.md>.
+
+   [RFC7642]  LI, K., Ed., Hunt, P., Khasnabish, B., Nadalin, A., and Z.
+              Zeltsan, "System for Cross-domain Identity Management:
+              Definitions, Overview, Concepts, and Requirements",
+              RFC 7642, DOI 10.17487/RFC7642, September 2015,
+              <https://www.rfc-editor.org/rfc/rfc7642>.
+
+   [RFC7644]  Hunt, P., Ed., Grizzle, K., Ansari, M., Wahlstroem, E.,
+              and C. Mortimore, "System for Cross-domain Identity
+              Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
+              September 2015, <https://www.rfc-editor.org/rfc/rfc7644>.
+
+Appendix A.  Acknowledgments
+
+   We would like to thanks the authors of the SCIM Extension for
+   Privileged Access Management (https://datatracker.ietf.org/doc/id/
+   draft-grizzle-scim-pam-ext-01.txt) and Device Schema Extensions to
+   the SCIM model (https://datatracker.ietf.org/doc/draft-ietf-scim-
+   device-model/) which served as excellent guidance on how to document
+   proposed extension to the SCIM protocol.
+
+   Additionaly, we would like to thank all the contributors the emerging
+   agent standards which inspired this extension, including:
+
+   *  Agent communication protocol
+      (https://agentcommunicationprotocol.dev/core-concepts/agent-
+      discovery)
+
+   *  Agent 2 Agent (https://a2a-protocol.org/latest/topics/agent-
+      discovery/)
+
+   *  Agent name service (https://genai.owasp.org/resource/agent-name-
+      service-ans-for-secure-al-agent-discovery-v1-0/)
+
+   *  AGNTCY directory (https://docs.agntcy.org/dir/overview/)
 
 Author's Address
 
