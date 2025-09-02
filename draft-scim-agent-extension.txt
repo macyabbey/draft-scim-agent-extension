@@ -107,7 +107,7 @@ Table of Contents
    The SCIM protocol was originally developed to address an *abundance*
    of complex standards for describing and exchanging user information.
 
-   As stated in the introduction of RFC764#Section-1.1
+   As stated in the introduction of RFC7643#Section-1.1
    (https://datatracker.ietf.org/doc/html/rfc7643#section-1.1)
 
       While there are existing standards for describing and exchanging
@@ -185,16 +185,16 @@ Table of Contents
    SCIM endpoints that support Agent extensions MUST advertise this
    support in the ServiceProviderConfig endpoint as defined:
 
-   ``` agentExtension A complex type that specifies Agent Extension
-   configuration options.
+  agentExtension
+     A complex type that specifies Agent Extension configuration options.
 
-  supported Boolean value specifying whether any aspect of the extension is supported.
+     supported Boolean value specifying whether any aspect of the extension is supported.
 
-  agentsSupported Boolean value specifying whether the agent resource type
-                  is supported
+     agentsSupported Boolean value specifying whether the agent resource type
+                     is supported
 
-  agenticApplicationsSupported Boolean value specifying whether the agent
-                               resource type is supported ```
+     agenticApplicationsSupported Boolean value specifying whether the agent
+                                  resource type is supported
 
    This is required so that:
 
@@ -247,8 +247,9 @@ Table of Contents
 
    Example (note that escaping has been removed for readability):
 
-   GET /scim/v2/Agents?filter=name eq 'Helpdesk bot' GET /scim/v2/
-   Agents?filter=externalId eq '8ccc535b-716d-4d32-b3e9-57c8be449c82'
+  GET /scim/v2/Agents?filter=name eq 'Helpdesk bot'
+
+  GET /scim/v2/Agents?filter=externalId eq '8ccc535b-716d-4d32-b3e9-57c8be449c82'
 
 5.1.3.  Agent Common Attributes
 
@@ -276,50 +277,63 @@ Table of Contents
 
    The following attributes are defined in the core agent schema.
 
-   name The name of the Agent.  REQUIRED
+  name  The name of the Agent.  REQUIRED
 
-   displayName The display name of the Agent.  If displayName is
-   unassigned, the name MAY be used as the display name.
+  displayName
+     The display name of the Agent.  If displayName is unassigned,
+     the name MAY be used as the display name.
 
-   description The description of the Agent.
+  description
+     The description of the Agent.
 
-   type The type of agent.  There are no canonical values defined for
-   type, but service providers MAY choose to define the valid types.
+  type
+     The type of agent. There are no canonical values defined
+     for type, but service providers MAY choose to define the valid
+     types.
 
-   active A Boolean value indicating the agent's administrative status.
-   The definitive meaning of this attribute is determined by the service
-   provider.  As a typical example, a value of true implies that the
-   agent is running, while a value of false implies that the agent has
-   been suspended.
+  active
+     A Boolean value indicating the agent's administrative status.  The
+     definitive meaning of this attribute is determined by the service
+     provider.  As a typical example, a value of true implies that the
+     agent is running, while a value of false implies that the
+     agent has been suspended.
 
-   entitlements An optional complex object that indicates entitlements
-   the agent has.  Its form is precisely the same as that defined in
-   Section 4.1.2 of [RFC7643].
+  entitlements
+     An optional complex object that indicates entitlements the agent has.
+     Its form is precisely the same as that defined in Section 4.1.2 of
+     {{RFC7643}}.
 
-   roles: An optional complex object that indicates roles the agent
-   assumes.  Its form is precisely the same as that defined in
-   Section 4.1.2 of [RFC7643].
+  roles:
+     An optional complex object that indicates roles the agent assumes.
+     Its form is precisely the same as that defined in Section 4.1.2 of
+     {{RFC7643}}.
 
-   groups: An optional read-only complex object that indicates group
-   membership.  Its form is precisely the same as that defined in
-   Section 4.1.2 of [RFC7643].
+  groups:
+     An optional read-only complex object that indicates group
+     membership.  Its form is precisely the same as that defined in
+     Section 4.1.2 of {{RFC7643}}.
 
-   applications A complex multi-valued attribute referencing
-   applications this agent shares a trust boundary with.  See "Agentic
-   Application" section of this document.
+  applications
+     A complex multi-valued attribute referencing applications this agent
+     shares a trust boundary with. See "Agentic Application" section of
+     this document.
 
-   subject An optional attribute that clients may specify when
-   provisioning an agent so that service providers implementing inbound
-   token federation may correlate the agent with the sub claim in an
-   inbound token from an OpenID connect provider.
+  <!-- TODO subject be in an extension instead of core? -->
+  subject An optional attribute that clients may specify when
+          provisioning an agent so that
+          service providers implementing inbound token federation
+          may correlate the agent with the `sub` claim in
+          an inbound token from an OpenID connect provider.
 
-   protocols A complex attribute that informs service providers of the
-   various communication protocols an agent may support.  This
-   information can help service providers automatically support agent to
-   agent or human to agent communication scenarios.  An agent that
-   supports no protocols is understood to the service provider to not be
-   directly accessible.  For example, when an agent can only be accessed
-   via its containing agentic application.
+  <!-- TODO should protocols be in an extension instead of core? -->
+  protocols
+     A complex attribute that informs service providers of the
+     various communication protocols an agent may support.
+     This information can help service providers automatically
+     support agent to agent or human to agent communication scenarios.
+     An agent that supports no protocols is understood to the service provider
+     to not be directly accessible. For example, when an agent can only
+     be accessed via its containing agentic application.
 
      The following sub-attributes are defined.
 
@@ -327,13 +341,17 @@ Table of Contents
              are provided based on known agent protocols. They are:
              A2A, OpenAPI, MCP-Client, MCP-Server
 
-   specificationUrl The URL the service provider may retrieve the
-   specification document describing the agent's specific information
-   for that protocol.
+        <!-- TODO  example values per spec type -->
+        specificationUrl The URL the service provider may retrieve the
+                         specification document describing the agent's specific
+                         information for that protocol.
 
-   parent A complex attribute that defines the parent Agent of this
-   Agent if the service provider supports hierarchies of agents.  The
-   following sub-attributes are defined.
+
+  <!-- TODO should owners be in an extension instead of core? -->
+  parent
+     A complex attribute that defines the parent Agent of this
+     Agent if the service provider supports hierarchies of
+     agents.  The following sub-attributes are defined.
 
      value  The ID of the agent that is the parent of this
         Agent in the hierarchy.
@@ -344,9 +362,11 @@ Table of Contents
      display  The display name of the Agent that is the parent of
         this Agent in the hierarchy.
 
-   owners A complex multi-valued attribute that defines the User or
-   Group objects that are owners of this Agent.  OPTIONAL.  The
-   following sub-attributes are defined for each value object.
+  <!-- TODO should owners be in an extension instead of core? -->
+  owners
+     A complex multi-valued attribute that defines the User or Group objects
+     that are owners of this Agent.  OPTIONAL.  The following sub-attributes are
+     defined for each value object.
 
      value  The ID of the User that owns this Agent.
 
