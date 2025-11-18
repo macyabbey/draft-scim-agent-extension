@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-16T00:08:56.727774+00:00",
+  "timestamp": "2025-11-18T00:08:56.626338+00:00",
   "repo": "macyabbey/draft-abbey-scim-agent-extension",
   "labels": [
     {
@@ -49,7 +49,40 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 5,
+      "id": "I_kwDOPjJNGM7Yeb-I",
+      "title": "Need some clarification for properties like \"x509Certificates\"",
+      "url": "https://github.com/macyabbey/draft-abbey-scim-agent-extension/issues/5",
+      "state": "OPEN",
+      "author": "vivshankar",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I came across this draft for a new SCIM resource type for Agents. I am curious about the purpose of a couple of properties -\n\n1. `x509Certificates`: What is it meant to be used for? It isn't clear to me what user certificates are referenced here.\n2. `applications`: Are application instances also meant to represent OAuth clients that the Agent might use for, say, token exchange or to authenticate itself to an authorization server? Also, how do you see this pairing with an MCP server that registers itself using DCR?\n\nShould there be a free-form method of defining metadata/labels that might feed into a PDP? Or do you think this should be handled through custom extensions to the schema?",
+      "createdAt": "2025-11-17T05:55:44Z",
+      "updatedAt": "2025-11-17T05:55:44Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOPjJNGM7YeqRK",
+      "title": "Collaboration across different Agent Identity drafts",
+      "url": "https://github.com/macyabbey/draft-abbey-scim-agent-extension/issues/6",
+      "state": "OPEN",
+      "author": "vivshankar",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I came across another draft that pre-dates this one: https://datatracker.ietf.org/doc/draft-wahl-scim-agent-schema/\n\nI am curious to know if you saw some gaps with the proposed draft or something missing in the scope of that document. To clarify, I am not in any way affiliated with the other draft.",
+      "createdAt": "2025-11-17T06:21:19Z",
+      "updatedAt": "2025-11-17T06:21:19Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
